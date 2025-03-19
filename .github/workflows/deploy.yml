@@ -38,6 +38,9 @@ jobs:
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
           VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
 
+      - name: Create quiz dist directory
+        run: mkdir -p quiz/dist
+
       - name: Install dependencies for quiz app
         working-directory: ./quiz
         run: npm ci
@@ -53,7 +56,7 @@ jobs:
         run: |
           mkdir -p dist/quiz
           mkdir -p dist/pages
-          cp -r quiz/dist/* dist/quiz/
+          cp -r quiz/dist/* dist/quiz/ || echo "No quiz dist files to copy"
           cp sitemap.xml dist/
           cp public/404.html dist/
           cp privacy-policy.html dist/

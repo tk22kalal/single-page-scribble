@@ -1,8 +1,11 @@
+
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { generateQuestion } from "@/services/groqService";
 import { toast } from "sonner";
 import { QuizResults } from "./QuizResults";
+import { NativeAd } from "./ads/NativeAd";
+import { InArticleAd } from "./ads/InArticleAd";
 
 interface QuizProps {
   subject: string;
@@ -116,15 +119,18 @@ export const Quiz = ({ subject, chapter, topic, difficulty, questionCount, timeL
 
   if (isQuizComplete) {
     return (
-      <QuizResults 
-        score={score} 
-        totalQuestions={parseInt(questionCount)} 
-        onRestartQuiz={handleRestartQuiz}
-        subject={subject}
-        chapter={chapter}
-        topic={topic}
-        difficulty={difficulty}
-      />
+      <>
+        <QuizResults 
+          score={score} 
+          totalQuestions={parseInt(questionCount)} 
+          onRestartQuiz={handleRestartQuiz}
+          subject={subject}
+          chapter={chapter}
+          topic={topic}
+          difficulty={difficulty}
+        />
+        <NativeAd className="my-8" />
+      </>
     );
   }
 
@@ -162,6 +168,8 @@ export const Quiz = ({ subject, chapter, topic, difficulty, questionCount, timeL
           ))}
         </div>
 
+        {questionNumber % 3 === 0 && <InArticleAd className="my-6" />}
+
         {selectedAnswer && (
           <div className="mt-6">
             <Button
@@ -174,6 +182,7 @@ export const Quiz = ({ subject, chapter, topic, difficulty, questionCount, timeL
             {showExplanation && (
               <div className="bg-gray-50 p-4 rounded-md">
                 <p className="text-gray-700">{currentQuestion.explanation}</p>
+                <NativeAd className="mt-6" />
               </div>
             )}
             <Button onClick={handleNext} className="mt-4">
