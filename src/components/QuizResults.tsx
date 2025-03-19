@@ -4,6 +4,7 @@ import { Trophy } from "lucide-react";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
+import { SquareAd } from "./ads/SquareAd";
 
 interface QuizResultsProps {
   score: number;
@@ -69,6 +70,12 @@ export const QuizResults = ({
           <div className="text-2xl text-gray-600">
             {percentage}% Correct
           </div>
+          
+          {/* Ad within results */}
+          <div className="my-4">
+            <SquareAd />
+          </div>
+          
           <div className="mt-8">
             <button 
               onClick={() => navigate("/quiz/setup")}

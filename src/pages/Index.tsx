@@ -7,6 +7,9 @@ import { Footer } from "@/components/Footer";
 import { Book } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { HorizontalAd } from "@/components/ads/HorizontalAd";
+import { SquareAd } from "@/components/ads/SquareAd";
+import { VerticalAd } from "@/components/ads/VerticalAd";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -51,6 +54,11 @@ const Index = () => {
           </div>
         </div>
       </section>
+      
+      {/* Horizontal Ad below hero section */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <HorizontalAd />
+      </div>
 
       {/* Content Section with New Layout */}
       <section className="py-12 px-4 sm:px-6 lg:px-8">
@@ -92,6 +100,11 @@ const Index = () => {
               </div>
             </div>
           </div>
+          
+          {/* Square Ad in the middle */}
+          <div className="mb-8">
+            <SquareAd />
+          </div>
 
           {/* Bottom Row - Centered Card */}
           <div className="max-w-3xl mx-auto">
@@ -128,6 +141,11 @@ const Index = () => {
           </div>
         </div>
       </section>
+      
+      {/* Vertical Ad near footer */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
+        <VerticalAd />
+      </div>
 
       <Footer />
     </div>

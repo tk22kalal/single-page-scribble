@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { generateQuestion, handleDoubt } from "@/services/groqService";
@@ -6,6 +5,8 @@ import { toast } from "sonner";
 import { QuizResults } from "./QuizResults";
 import { Textarea } from "./ui/textarea";
 import { Card } from "./ui/card";
+import { HorizontalAd } from "./ads/HorizontalAd";
+import { SquareAd } from "./ads/SquareAd";
 
 interface QuizProps {
   subject: string;
@@ -47,7 +48,6 @@ export const Quiz = ({ subject, chapter, topic, difficulty, questionCount, timeL
   useEffect(() => {
     loadQuestion();
     
-    // Initialize AdMob for mobile apps
     initializeAdMob();
   }, []);
 
@@ -69,7 +69,6 @@ export const Quiz = ({ subject, chapter, topic, difficulty, questionCount, timeL
   }, [timeRemaining]);
 
   const initializeAdMob = () => {
-    // Check if running in mobile app context
     const isMobileApp = window.location.href.includes('capacitor://') || 
                      window.location.href.includes('app://') ||
                      document.URL.includes('app://') ||
@@ -77,13 +76,11 @@ export const Quiz = ({ subject, chapter, topic, difficulty, questionCount, timeL
     
     if (isMobileApp && window.admob) {
       try {
-        // Create banner ad
         window.admob.createBannerView({
           adSize: window.admob.AD_SIZE.SMART_BANNER,
-          adId: 'ca-app-pub-5920367457745298/1075487452' // Replace with your actual banner ad unit ID
+          adId: 'ca-app-pub-5920367457745298/1075487452'
         });
         
-        // Show banner ad
         window.admob.showBannerAd(true);
         console.log('AdMob banner initialized');
       } catch (error) {
@@ -93,7 +90,6 @@ export const Quiz = ({ subject, chapter, topic, difficulty, questionCount, timeL
   };
 
   const showInterstitialAd = () => {
-    // Check if running in mobile app context
     const isMobileApp = window.location.href.includes('capacitor://') || 
                      window.location.href.includes('app://') ||
                      document.URL.includes('app://') ||
@@ -101,9 +97,8 @@ export const Quiz = ({ subject, chapter, topic, difficulty, questionCount, timeL
     
     if (isMobileApp && window.admob) {
       try {
-        // Prepare interstitial ad
         window.admob.prepareInterstitial({
-          adId: 'ca-app-pub-5920367457745298/6136242451', // Replace with your actual interstitial ad unit ID
+          adId: 'ca-app-pub-5920367457745298/6136242451',
           autoShow: true
         });
         console.log('AdMob interstitial shown');
@@ -114,7 +109,6 @@ export const Quiz = ({ subject, chapter, topic, difficulty, questionCount, timeL
   };
 
   const showRewardedAd = () => {
-    // Check if running in mobile app context
     const isMobileApp = window.location.href.includes('capacitor://') || 
                      window.location.href.includes('app://') ||
                      document.URL.includes('app://') ||
@@ -122,9 +116,8 @@ export const Quiz = ({ subject, chapter, topic, difficulty, questionCount, timeL
     
     if (isMobileApp && window.admob && window.admob.prepareRewardVideoAd) {
       try {
-        // Prepare rewarded ad
         window.admob.prepareRewardVideoAd({
-          adId: 'ca-app-pub-5920367457745298/4823161085', // Replace with your actual rewarded ad unit ID
+          adId: 'ca-app-pub-5920367457745298/4823161085',
           autoShow: true
         });
         console.log('AdMob rewarded ad shown');
@@ -172,8 +165,7 @@ export const Quiz = ({ subject, chapter, topic, difficulty, questionCount, timeL
         setScore(prev => prev + 1);
       }
       
-      // Show a rewarded ad occasionally when user answers
-      const shouldShowAd = Math.random() < 0.2; // 20% chance
+      const shouldShowAd = Math.random() < 0.2;
       if (shouldShowAd) {
         showRewardedAd();
       }
@@ -181,7 +173,6 @@ export const Quiz = ({ subject, chapter, topic, difficulty, questionCount, timeL
   };
 
   const handleNext = () => {
-    // Increment ad counter and show interstitial ad every 3 questions
     const newAdCounter = adCounter + 1;
     setAdCounter(newAdCounter);
     
@@ -225,7 +216,6 @@ export const Quiz = ({ subject, chapter, topic, difficulty, questionCount, timeL
     setDoubt("");
     setIsLoadingAnswer(false);
     
-    // Show reward ad after asking a doubt (30% chance)
     const shouldShowAd = Math.random() < 0.3;
     if (shouldShowAd) {
       showRewardedAd();
@@ -239,18 +229,22 @@ export const Quiz = ({ subject, chapter, topic, difficulty, questionCount, timeL
   };
 
   if (isQuizComplete) {
-    // Show an interstitial ad when quiz completes
     showInterstitialAd();
     
     return (
-      <QuizResults 
-        score={score} 
-        totalQuestions={parseInt(questionCount)} 
-        subject={subject}
-        chapter={chapter}
-        topic={topic}
-        difficulty={difficulty}
-      />
+      <>
+        <div className="max-w-4xl mx-auto p-6">
+          <HorizontalAd />
+        </div>
+        <QuizResults 
+          score={score} 
+          totalQuestions={parseInt(questionCount)} 
+          subject={subject}
+          chapter={chapter}
+          topic={topic}
+          difficulty={difficulty}
+        />
+      </>
     );
   }
 
@@ -270,6 +264,10 @@ export const Quiz = ({ subject, chapter, topic, difficulty, questionCount, timeL
             <div className="text-lg">Time: {formatTime(timeRemaining)}</div>
           )}
         </div>
+      </div>
+
+      <div className="my-4">
+        <HorizontalAd />
       </div>
 
       <div className="bg-white p-6 rounded-lg shadow-md">
@@ -308,6 +306,10 @@ export const Quiz = ({ subject, chapter, topic, difficulty, questionCount, timeL
                   <div>
                     <h3 className="font-semibold mb-2">Correct Answer Explanation:</h3>
                     <p className="text-gray-700">{currentQuestion?.explanation}</p>
+                  </div>
+                  
+                  <div className="py-2">
+                    <SquareAd />
                   </div>
                   
                   <div className="border-t pt-4">
@@ -353,7 +355,6 @@ export const Quiz = ({ subject, chapter, topic, difficulty, questionCount, timeL
   );
 };
 
-// Add types for AdMob
 declare global {
   interface Window {
     admob?: {
