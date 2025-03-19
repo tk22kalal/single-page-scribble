@@ -55,14 +55,18 @@ jobs:
       - name: Prepare combined dist directory
         run: |
           mkdir -p dist/quiz
-          mkdir -p dist/pages
           cp -r quiz/dist/* dist/quiz/ || echo "No quiz dist files to copy"
-          cp sitemap.xml dist/
-          cp public/404.html dist/
-          cp privacy-policy.html dist/
-          cp Disclaimer.html dist/disclaimer.html
-          cp public/quiz-setup.html dist/
-          cp -r pages/* dist/pages/
+          cp sitemap.xml dist/ || echo "No sitemap.xml file to copy"
+          cp -r public/404.html dist/ || echo "No 404.html file to copy"
+          cp privacy-policy.html dist/ || echo "No privacy-policy.html file to copy"
+          cp Disclaimer.html dist/disclaimer.html || echo "No Disclaimer.html file to copy"
+          if [ -f "public/quiz-setup.html" ]; then
+            cp public/quiz-setup.html dist/
+          fi
+          if [ -d "pages" ]; then
+            mkdir -p dist/pages
+            cp -r pages/* dist/pages/ || echo "No pages files to copy"
+          fi
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
