@@ -40,6 +40,7 @@ export const GoogleAdSense: React.FC<GoogleAdSenseProps> = ({
       if (adRef.current) {
         const ads = adRef.current.querySelectorAll('ins.adsbygoogle');
         if (ads.length > 0) {
+          // Initialize adsbygoogle if it doesn't exist
           (window.adsbygoogle = window.adsbygoogle || []).push({});
         }
       }
