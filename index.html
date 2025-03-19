@@ -3,78 +3,23 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/fevicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Medquiz:AI-Powered Medical Exam Question Bank</title>
-
-    <!-- Google AdSense -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5920367457745298"
-     crossorigin="anonymous"></script>
-
-    <!-- SEO Meta Tags -->
-    <meta name="description" content="Medquiz is an AI-powered free medical question bank for NEET PG, INI-CET, FMGE, USMLE, and MBBS students. Practice high-quality, AI-generated medical MCQs with explanations." />
-    <meta name="keywords" content="medical quiz, NEET PG, INI-CET, FMGE, USMLE, MBBS, AI-powered MCQs, medical question bank, free medical tests, Medquiz AI" />
-    <meta name="author" content="Medquiz" />
-
-    <!-- Open Graph (OG) Meta Tags for Social Media -->
-    <meta property="og:title" content="Medquiz: AI-Powered Medical Exam Question Bank" />
-    <meta property="og:description" content="Free AI-generated medical question bank for NEET PG, INI-CET, FMGE, USMLE, and MBBS students." />
-    <meta property="og:image" content="/og-image.png" />
-    <meta property="og:url" content="https://medquizai.site" />
-    <meta property="og:type" content="website" />
-
-    <!-- Twitter Card Meta Tags -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Medquiz: AI-Powered Medical Exam Question Bank" />
-    <meta name="twitter:description" content="Free AI-generated medical question bank for NEET PG, INI-CET, FMGE, USMLE, and MBBS students." />
-    <meta name="twitter:image" content="/og-image.png" />
-
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon.png" />
-    
-    <!-- Base URL -->
-    <base href="/" />
-
-    <!-- Prerender for SEO -->
+    <meta name="description" content="Free medical question bank for NEET PG, INI-CET, FMGE, USMLE, and MBBS preparation." />
+    <title>Medquiz: AI-Powered Medical Exam Question Bank</title>
+    <meta name="google-adsense-account" content="ca-pub-5920367457745298">
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BGXLK5GM7X"></script>
     <script>
-      // Create static versions of dynamic routes for SEO
-      const routes = ['/blog', '/quiz/setup'];
-      const currentPath = window.location.pathname;
-      
-      if (routes.includes(currentPath)) {
-        document.addEventListener('DOMContentLoaded', function() {
-          // Force render the content immediately for crawlers
-          const root = document.getElementById('root');
-          if (root && !root.hasChildNodes()) {
-            const meta = document.createElement('meta');
-            meta.setAttribute('name', 'robots');
-            meta.setAttribute('content', 'noindex, nofollow');
-            document.head.appendChild(meta);
-          }
-        });
-      }
-    </script>
-
-    <!-- GitHub Pages SPA Redirect -->
-    <script type="text/javascript">
-      // Single Page Apps for GitHub Pages
-      // MIT License
-      // https://github.com/rafgraph/spa-github-pages
-      (function(l) {
-        if (l.search[1] === '/' ) {
-          var decoded = l.search.slice(1).split('&').map(function(s) { 
-            return s.replace(/~and~/g, '&')
-          }).join('?');
-          window.history.replaceState(null, null,
-              l.pathname.slice(0, -1) + decoded + l.hash
-          );
-        }
-      }(window.location))
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-BGXLK5GM7X');
     </script>
   </head>
-
   <body>
     <div id="root"></div>
+    <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
