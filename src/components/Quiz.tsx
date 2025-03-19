@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { generateQuestion, handleDoubt } from "@/services/groqService";
@@ -47,8 +48,6 @@ export const Quiz = ({ subject, chapter, topic, difficulty, questionCount, timeL
 
   useEffect(() => {
     loadQuestion();
-    
-    initializeAdMob();
   }, []);
 
   useEffect(() => {
@@ -67,65 +66,6 @@ export const Quiz = ({ subject, chapter, topic, difficulty, questionCount, timeL
       return () => clearInterval(timer);
     }
   }, [timeRemaining]);
-
-  const initializeAdMob = () => {
-    const isMobileApp = window.location.href.includes('capacitor://') || 
-                     window.location.href.includes('app://') ||
-                     document.URL.includes('app://') ||
-                     navigator.userAgent.includes('Median');
-    
-    if (isMobileApp && window.admob) {
-      try {
-        window.admob.createBannerView({
-          adSize: window.admob.AD_SIZE.SMART_BANNER,
-          adId: 'ca-app-pub-5920367457745298/1075487452'
-        });
-        
-        window.admob.showBannerAd(true);
-        console.log('AdMob banner initialized');
-      } catch (error) {
-        console.error('AdMob initialization error:', error);
-      }
-    }
-  };
-
-  const showInterstitialAd = () => {
-    const isMobileApp = window.location.href.includes('capacitor://') || 
-                     window.location.href.includes('app://') ||
-                     document.URL.includes('app://') ||
-                     navigator.userAgent.includes('Median');
-    
-    if (isMobileApp && window.admob) {
-      try {
-        window.admob.prepareInterstitial({
-          adId: 'ca-app-pub-5920367457745298/6136242451',
-          autoShow: true
-        });
-        console.log('AdMob interstitial shown');
-      } catch (error) {
-        console.error('AdMob interstitial error:', error);
-      }
-    }
-  };
-
-  const showRewardedAd = () => {
-    const isMobileApp = window.location.href.includes('capacitor://') || 
-                     window.location.href.includes('app://') ||
-                     document.URL.includes('app://') ||
-                     navigator.userAgent.includes('Median');
-    
-    if (isMobileApp && window.admob && window.admob.prepareRewardVideoAd) {
-      try {
-        window.admob.prepareRewardVideoAd({
-          adId: 'ca-app-pub-5920367457745298/4823161085',
-          autoShow: true
-        });
-        console.log('AdMob rewarded ad shown');
-      } catch (error) {
-        console.error('AdMob rewarded ad error:', error);
-      }
-    }
-  };
 
   const getOptionStyle = (option: string) => {
     if (!selectedAnswer) {
@@ -164,21 +104,11 @@ export const Quiz = ({ subject, chapter, topic, difficulty, questionCount, timeL
       if (answer === currentQuestion?.correctAnswer) {
         setScore(prev => prev + 1);
       }
-      
-      const shouldShowAd = Math.random() < 0.2;
-      if (shouldShowAd) {
-        showRewardedAd();
-      }
     }
   };
 
   const handleNext = () => {
-    const newAdCounter = adCounter + 1;
-    setAdCounter(newAdCounter);
-    
-    if (newAdCounter % 3 === 0) {
-      showInterstitialAd();
-    }
+    setAdCounter(prev => prev + 1);
     
     if (questionCount !== "No Limit" && questionNumber >= parseInt(questionCount)) {
       setIsQuizComplete(true);
@@ -215,11 +145,6 @@ export const Quiz = ({ subject, chapter, topic, difficulty, questionCount, timeL
 
     setDoubt("");
     setIsLoadingAnswer(false);
-    
-    const shouldShowAd = Math.random() < 0.3;
-    if (shouldShowAd) {
-      showRewardedAd();
-    }
   };
 
   const formatTime = (seconds: number): string => {
@@ -229,8 +154,6 @@ export const Quiz = ({ subject, chapter, topic, difficulty, questionCount, timeL
   };
 
   if (isQuizComplete) {
-    showInterstitialAd();
-    
     return (
       <>
         <div className="max-w-4xl mx-auto p-6">
@@ -354,24 +277,3 @@ export const Quiz = ({ subject, chapter, topic, difficulty, questionCount, timeL
     </div>
   );
 };
-
-declare global {
-  interface Window {
-    admob?: {
-      initialize: (appId: string) => void;
-      AD_SIZE: {
-        SMART_BANNER: string;
-        LARGE_BANNER: string;
-        BANNER: string;
-        MEDIUM_RECTANGLE: string;
-        FULL_BANNER: string;
-        LEADERBOARD: string;
-      };
-      createBannerView: (options: any) => void;
-      showBannerAd: (show: boolean) => void;
-      prepareInterstitial: (options: any) => void;
-      prepareRewardVideoAd: (options: any) => void;
-    };
-    admobAppId: string;
-  }
-}

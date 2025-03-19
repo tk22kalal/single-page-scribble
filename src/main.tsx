@@ -17,26 +17,11 @@ const addAdSenseScript = () => {
   }
 };
 
-// Initialize ad-related code
+// Initialize ads
 const initializeAds = () => {
   // Check if running in browser environment
   if (typeof window !== 'undefined') {
     addAdSenseScript();
-
-    // Initialize mobile ads if in a mobile app context
-    const isMobileApp = window.location.href.includes('capacitor://') || 
-                      window.location.href.includes('app://') ||
-                      document.URL.includes('app://') ||
-                      navigator.userAgent.includes('Median');
-    
-    if (isMobileApp && window.admob) {
-      try {
-        window.admob.initialize(window.admobAppId || "ca-app-pub-5920367457745298~6087552730");
-        console.log('AdMob initialized in mobile app');
-      } catch (error) {
-        console.error('AdMob initialization error:', error);
-      }
-    }
   }
 };
 

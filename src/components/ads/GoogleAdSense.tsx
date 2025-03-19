@@ -8,6 +8,8 @@ interface GoogleAdSenseProps {
   responsive?: boolean;
   style?: React.CSSProperties;
   className?: string;
+  layout?: string;
+  layoutKey?: string;
 }
 
 export const GoogleAdSense: React.FC<GoogleAdSenseProps> = ({
@@ -17,6 +19,8 @@ export const GoogleAdSense: React.FC<GoogleAdSenseProps> = ({
   responsive = true,
   style,
   className,
+  layout,
+  layoutKey,
 }) => {
   const adRef = useRef<HTMLDivElement>(null);
 
@@ -58,6 +62,8 @@ export const GoogleAdSense: React.FC<GoogleAdSenseProps> = ({
         data-ad-slot={slot}
         data-ad-format={format}
         data-full-width-responsive={responsive ? 'true' : 'false'}
+        data-ad-layout={layout}
+        data-ad-layout-key={layoutKey}
       />
     </div>
   );
