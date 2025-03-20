@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { QuizResults } from "./QuizResults";
 import { NativeAd } from "./ads/NativeAd";
 import { InArticleAd } from "./ads/InArticleAd";
+import { QuizAd } from "./ads/QuizAd";
 
 interface QuizProps {
   subject: string;
@@ -120,10 +121,10 @@ export const Quiz = ({ subject, chapter, topic, difficulty, questionCount, timeL
   if (isQuizComplete) {
     return (
       <>
+        <QuizAd className="my-4" />
         <QuizResults 
           score={score} 
           totalQuestions={parseInt(questionCount)} 
-          onRestartQuiz={handleRestartQuiz}
           subject={subject}
           chapter={chapter}
           topic={topic}
@@ -140,6 +141,9 @@ export const Quiz = ({ subject, chapter, topic, difficulty, questionCount, timeL
 
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-6 mt-16">
+      {/* Top Ad */}
+      <QuizAd className="mb-4" />
+      
       <div className="flex justify-between items-center">
         <div className="text-lg font-semibold">
           Question {questionNumber} {questionCount !== "No Limit" && `of ${questionCount}`}
@@ -168,7 +172,7 @@ export const Quiz = ({ subject, chapter, topic, difficulty, questionCount, timeL
           ))}
         </div>
 
-        {questionNumber % 3 === 0 && <InArticleAd className="my-6" />}
+        {questionNumber % 2 === 0 && <InArticleAd className="my-6" />}
 
         {selectedAnswer && (
           <div className="mt-6">
@@ -191,6 +195,9 @@ export const Quiz = ({ subject, chapter, topic, difficulty, questionCount, timeL
           </div>
         )}
       </div>
+      
+      {/* Bottom Ad */}
+      <NativeAd className="mt-6" />
     </div>
   );
 };

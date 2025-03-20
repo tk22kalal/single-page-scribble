@@ -8,6 +8,8 @@ import { Textarea } from "./ui/textarea";
 import { Card } from "./ui/card";
 import { HorizontalAd } from "./ads/HorizontalAd";
 import { SquareAd } from "./ads/SquareAd";
+import { InArticleAd } from "./ads/InArticleAd";
+import { MultiplexHorizontalAd } from "./ads/MultiplexHorizontalAd";
 
 interface QuizProps {
   subject: string;
@@ -157,7 +159,7 @@ export const Quiz = ({ subject, chapter, topic, difficulty, questionCount, timeL
     return (
       <>
         <div className="max-w-4xl mx-auto p-6">
-          <HorizontalAd />
+          <MultiplexHorizontalAd />
         </div>
         <QuizResults 
           score={score} 
@@ -208,6 +210,13 @@ export const Quiz = ({ subject, chapter, topic, difficulty, questionCount, timeL
             </Button>
           ))}
         </div>
+
+        {/* In-Article Ad after every 2 questions */}
+        {questionNumber % 2 === 0 && (
+          <div className="my-6">
+            <InArticleAd />
+          </div>
+        )}
 
         {selectedAnswer && (
           <div className="mt-6">
@@ -273,6 +282,11 @@ export const Quiz = ({ subject, chapter, topic, difficulty, questionCount, timeL
             )}
           </div>
         )}
+      </div>
+      
+      {/* Bottom Ad */}
+      <div className="mt-6">
+        <MultiplexHorizontalAd />
       </div>
     </div>
   );

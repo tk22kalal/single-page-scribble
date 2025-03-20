@@ -1,7 +1,12 @@
+
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useEffect } from "react";
+import { HorizontalAd } from "@/components/ads/HorizontalAd";
+import { InArticleAd } from "@/components/ads/InArticleAd";
+import { MultiplexHorizontalAd } from "@/components/ads/MultiplexHorizontalAd";
+import { VerticalAd } from "@/components/ads/VerticalAd";
 
 const Blog = () => {
   useEffect(() => {
@@ -57,6 +62,11 @@ const Blog = () => {
             Medical Education Resource Hub - Latest Updates & Study Guides
           </h1>
 
+          {/* Horizontal Ad at the top */}
+          <div className="mb-8">
+            <HorizontalAd />
+          </div>
+
           {/* Table of Contents */}
           <div className="mb-12 p-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg">
             <h2 className="text-2xl font-semibold text-medblue dark:text-white mb-4">Quick Navigation</h2>
@@ -82,6 +92,11 @@ const Blog = () => {
                 </li>
               </ul>
             </ScrollArea>
+          </div>
+          
+          {/* In-Article Ad */}
+          <div className="mb-8">
+            <InArticleAd />
           </div>
           
           {/* Featured Blog Posts */}
@@ -138,6 +153,11 @@ const Blog = () => {
             </div>
           </div>
 
+          {/* MultiplexHorizontal Ad */}
+          <div className="mb-8">
+            <MultiplexHorizontalAd />
+          </div>
+
           {/* Additional Blog Posts */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <div id="clinical-skills" className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden scroll-mt-24">
@@ -190,6 +210,11 @@ const Blog = () => {
                 </div>
               </div>
             </div>
+          </div>
+          
+          {/* Vertical Ad at the bottom */}
+          <div className="mt-12">
+            <VerticalAd />
           </div>
         </div>
       </div>

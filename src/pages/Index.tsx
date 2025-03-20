@@ -10,6 +10,9 @@ import { toast } from "sonner";
 import { HorizontalAd } from "@/components/ads/HorizontalAd";
 import { SquareAd } from "@/components/ads/SquareAd";
 import { VerticalAd } from "@/components/ads/VerticalAd";
+import { InArticleAd } from "@/components/ads/InArticleAd";
+import { MultiplexHorizontalAd } from "@/components/ads/MultiplexHorizontalAd";
+import { MultiplexVerticalAd } from "@/components/ads/MultiplexVerticalAd";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -101,9 +104,9 @@ const Index = () => {
             </div>
           </div>
           
-          {/* Square Ad in the middle */}
+          {/* In-Article Ad in the middle */}
           <div className="mb-8">
-            <SquareAd />
+            <InArticleAd />
           </div>
 
           {/* Bottom Row - Centered Card */}
@@ -127,6 +130,11 @@ const Index = () => {
         </div>
       </section>
 
+      {/* MultiplexHorizontal Ad */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
+        <MultiplexHorizontalAd />
+      </div>
+
       {/* YouTube Video Space */}
       <section className="py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-3xl mx-auto">
@@ -142,9 +150,14 @@ const Index = () => {
         </div>
       </section>
       
-      {/* Vertical Ad near footer */}
+      {/* Square Ad */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
-        <VerticalAd />
+        <SquareAd />
+      </div>
+      
+      {/* MultiplexVertical Ad near footer */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
+        <MultiplexVerticalAd />
       </div>
 
       <Footer />
