@@ -140,7 +140,7 @@ const Index = () => {
         <div className="max-w-3xl mx-auto">
           <div className="aspect-w-16 aspect-h-9 rounded-lg overflow-hidden">
             <iframe
-              src="https://www.youtube.com/embed/9KHLTZaJcR8"
+              src="https://www.youtube.com/embed/B5NC8zQXesE?si"
               title="MedQuizAI Tutorial"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
