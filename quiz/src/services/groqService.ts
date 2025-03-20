@@ -1,3 +1,4 @@
+
 import { toast } from "sonner";
 
 const GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";
@@ -19,6 +20,7 @@ interface Question {
 }
 
 const getRandomQuestionType = () => {
+  // Expanded list of question types for more variety
   const questionTypes = [
     "anatomy and structure identification",
     "physiological functions",
@@ -29,7 +31,17 @@ const getRandomQuestionType = () => {
     "anatomical variations",
     "surgical landmarks",
     "diagnostic features",
-    "pathological conditions"
+    "pathological conditions",
+    "biochemical processes",
+    "pharmacological mechanisms",
+    "histological features",
+    "radiological findings",
+    "genetic disorders",
+    "immunological responses",
+    "microbiological aspects",
+    "laboratory diagnostics",
+    "therapeutic approaches",
+    "epidemiological factors"
   ];
   return questionTypes[Math.floor(Math.random() * questionTypes.length)];
 };
@@ -61,10 +73,13 @@ export const generateQuestion = async (scope: string, difficulty: string = 'easy
   };
 
   const questionType = getRandomQuestionType();
+  // Adding a random seed to increase variation
+  const randomSeed = Math.floor(Math.random() * 10000);
 
   try {
     console.log(`Generating ${difficulty} question for scope:`, scope);
     console.log("Question type:", questionType);
+    console.log("Random seed:", randomSeed);
     console.log("Making request to Groq API...");
     
     const response = await fetch(GROQ_API_URL, {
@@ -74,15 +89,15 @@ export const generateQuestion = async (scope: string, difficulty: string = 'easy
         "Authorization": `Bearer ${cleanedApiKey}`
       },
       body: JSON.stringify({
-        model: "mixtral-8x7b-32768",
+        model: "mistral-saba-24b", // Updated to new model
         messages: [
           {
             role: "system",
-            content: `You are a medical education expert specializing in NEET PG, FMGE, and INICET exam preparation. ${getDifficultyPrompt(difficulty)}`
+            content: `You are a medical education expert specializing in NEET PG, FMGE, and INICET exam preparation. ${getDifficultyPrompt(difficulty)} Make sure to generate a unique question that has not been generated before, focusing on specific, uncommon aspects of the topic.`
           },
           {
             role: "user",
-            content: `Generate a ${difficulty} level multiple choice question about ${questionType} in ${scope}. The question should be unique and not repetitive. Format the response in JSON with the following structure:
+            content: `Generate a ${difficulty} level multiple choice question about ${questionType} in ${scope}. The question should be unique, highly specific, and not repetitive. Include uncommon but medically accurate details to ensure variation. Use seed: ${randomSeed} for uniqueness. Format the response in JSON with the following structure:
             {
               "question": "question text",
               "options": ["A) option1", "B) option2", "C) option3", "D) option4"],
@@ -92,7 +107,7 @@ export const generateQuestion = async (scope: string, difficulty: string = 'easy
             }`
           }
         ],
-        temperature: 0.9,
+        temperature: 0.95, // Increased temperature for more variation
         max_tokens: 1024
       }),
     });
