@@ -93,11 +93,11 @@ export const generateQuestion = async (scope: string, difficulty: string = 'easy
         messages: [
           {
             role: "system",
-            content: `You are a medical expert specializing in NEET PG, FMGE, and INICET exam preparation. ${getDifficultyPrompt(difficulty)} Make sure to generate a high-yield topics question based on latest patter and syllabus. Avoid repetition from previous questions. IMPORTANT: Your response MUST be valid JSON format with no markdown or other formatting.`
+            content: `You are a medical expert specializing in NEET PG, FMGE, and INICET exam preparation. ${getDifficultyPrompt(difficulty)} Make sure to generate a high-yield topics question based on latest pattern and syllabus. Avoid repetition from previous questions. IMPORTANT: Your response MUST be valid JSON format with no markdown or other formatting. Do not use code blocks, backticks, or any other formatting.`
           },
           {
             role: "user",
-            content: `Generate a ${difficulty} level multiple choice question about ${questionType} in ${scope}. The question should be high-yeild topic based on NEET-PG and INICET. Include different-different types of question but medically accurate details to ensure variation. Use seed: ${randomSeed} for uniqueness. Format the response in VALID JSON with the following structure EXACTLY:
+            content: `Generate a ${difficulty} level multiple choice question about ${questionType} in ${scope}. The question should be high-yield topic based on NEET-PG and INICET. Include different types of question but medically accurate details to ensure variation. Use seed: ${randomSeed} for uniqueness. Format the response in VALID JSON with the following structure EXACTLY:
             {
               "question": "question text",
               "options": ["A) option1", "B) option2", "C) option3", "D) option4"],
@@ -105,10 +105,10 @@ export const generateQuestion = async (scope: string, difficulty: string = 'easy
               "explanation": "detailed explanation",
               "subject": "${scope}"
             }
-            Do not include any markdown, code blocks, or other formatting in your response - just the raw JSON object.`
+            Do not include any markdown, code blocks, backticks, or other formatting in your response - just the raw JSON object.`
           }
         ],
-        temperature: 0.95,
+        temperature: 0.7,
         max_tokens: 1024
       }),
     });
@@ -130,13 +130,24 @@ export const generateQuestion = async (scope: string, difficulty: string = 'easy
 
     try {
       // Clean the response content to ensure it's valid JSON
-      const content = data.choices[0].message.content.trim();
-      // Check if the content is wrapped in markdown code blocks and remove them
-      const cleanedContent = content.replace(/^```json\s*|\s*```$/g, '');
-      console.log("Cleaned content:", cleanedContent);
+      let content = data.choices[0].message.content.trim();
       
-      const questionData = JSON.parse(cleanedContent);
+      // More aggressive cleaning to remove any potential markdown or code blocks
+      content = content.replace(/```json\s*|\s*```/g, ''); // Remove json code blocks
+      content = content.replace(/```\s*|\s*```/g, '');     // Remove any other code blocks
+      content = content.replace(/^\s*\{/, '{');            // Ensure it starts with {
+      content = content.replace(/\}\s*$/, '}');            // Ensure it ends with }
+      
+      console.log("Cleaned content:", content);
+      
+      const questionData = JSON.parse(content);
       console.log("Successfully parsed question data:", questionData);
+      
+      // Validate that the response has the expected structure
+      if (!questionData.question || !questionData.options || !questionData.correctAnswer || !questionData.explanation) {
+        throw new Error("Response is missing required fields");
+      }
+      
       return questionData as Question;
     } catch (parseError) {
       console.error("Error parsing API response:", parseError);
