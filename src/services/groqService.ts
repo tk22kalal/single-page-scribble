@@ -62,13 +62,13 @@ export const generateQuestion = async (scope: string, difficulty: string = 'easy
   const getDifficultyPrompt = (level: string) => {
     switch(level.toLowerCase()) {
       case 'easy':
-        return "Generate a basic MBBS level question focusing on fundamental concepts.";
+        return "Focus on basic concepts and fundamental knowledge from standard textbooks.";
       case 'medium':
         return "Generate a moderate difficulty question that combines theoretical knowledge with clinical applications.";
       case 'hard':
         return "Generate a complex clinical scenario-based question that requires integration of multiple concepts.";
       default:
-        return "Generate a basic MBBS level question.";
+        return "Focus on basic concepts and fundamental knowledge from standard textbooks.";
     }
   };
 
@@ -93,11 +93,11 @@ export const generateQuestion = async (scope: string, difficulty: string = 'easy
         messages: [
           {
             role: "system",
-            content: `You are a medical education expert specializing in NEET PG, FMGE, and INICET exam preparation. ${getDifficultyPrompt(difficulty)} Make sure to generate a unique question that has not been generated before, focusing on specific, uncommon aspects of the topic. IMPORTANT: Your response MUST be valid JSON format with no markdown or other formatting.`
+            content: `You are a medical expert specializing in NEET PG, FMGE, and INICET exam preparation. ${getDifficultyPrompt(difficulty)} Make sure to generate a high-yield topics question based on latest patter and syllabus. Avoid repetition from previous questions. IMPORTANT: Your response MUST be valid JSON format with no markdown or other formatting.`
           },
           {
             role: "user",
-            content: `Generate a ${difficulty} level multiple choice question about ${questionType} in ${scope}. The question should be unique, highly specific, and not repetitive. Include uncommon but medically accurate details to ensure variation. Use seed: ${randomSeed} for uniqueness. Format the response in VALID JSON with the following structure EXACTLY:
+            content: `Generate a ${difficulty} level multiple choice question about ${questionType} in ${scope}. The question should be high-yeild topic based on NEET-PG and INICET. Include different-different types of question but medically accurate details to ensure variation. Use seed: ${randomSeed} for uniqueness. Format the response in VALID JSON with the following structure EXACTLY:
             {
               "question": "question text",
               "options": ["A) option1", "B) option2", "C) option3", "D) option4"],
