@@ -86,7 +86,7 @@ export const generateQuestion = async (scope: string, difficulty: string = 'easy
         "Authorization": `Bearer ${cleanedApiKey}`
       },
       body: JSON.stringify({
-        model: "mixtral-8x7b-32768", // Updated to new model
+        model: "llama-3.1-8b-instant", // Updated to currently supported model
         messages: [
           {
             role: "system",
@@ -166,7 +166,7 @@ export const handleDoubt = async (
         "Authorization": `Bearer ${cleanedApiKey}`
       },
       body: JSON.stringify({
-        model: "mixtral-8x7b-32768", // Updated to new model
+        model: "llama-3.1-8b-instant", // Updated to currently supported model
         messages: [
           {
             role: "system",
