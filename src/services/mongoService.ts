@@ -1,5 +1,5 @@
 
-import { MongoClient, ObjectId } from "mongodb";
+import { MongoClient, ObjectId, Document } from "mongodb";
 
 const uri = "mongodb+srv://tk22kalal:tk22kalal@cluster0.shm5c.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 const client = new MongoClient(uri);
@@ -96,9 +96,10 @@ export const saveQuizResult = async (
       completedAt: new Date()
     };
     
+    // Explicitly type the updateOne operation
     await quizzes.updateOne(
       { _id: new ObjectId(quizId) },
-      { $push: { participants: participant } }
+      { $push: { participants: participant } as any }
     );
   } catch (error) {
     console.error("Error saving quiz result to MongoDB:", error);
