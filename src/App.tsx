@@ -68,6 +68,27 @@ const SEO = () => {
 };
 
 const App = () => {
+  // Wrap the Index component in an error boundary to prevent white screen on error
+  const SafeComponent = (Component: any) => {
+    return (props: any) => {
+      try {
+        return <Component {...props} />;
+      } catch (error) {
+        console.error("Error rendering component:", error);
+        return <div className="p-10">
+          <h1 className="text-2xl font-bold text-red-500">Something went wrong</h1>
+          <p className="mt-4">There was an error loading this page. Please try again later.</p>
+          <button 
+            className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
+            onClick={() => window.location.href = "/"}
+          >
+            Return to Home
+          </button>
+        </div>;
+      }
+    };
+  };
+
   // Check if we're on a direct HTML page
   const path = window.location.pathname;
   if (path === '/privacy-policy.html') {
@@ -85,17 +106,17 @@ const App = () => {
         <BrowserRouter>
           <SEO />
           <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/blog" element={<Blog />} />
-            <Route path="/auth" element={<Auth />} />
-            <Route path="/apikey" element={<ApiKeyInput onSave={() => {}} />} />
-            <Route path="/quiz/setup" element={<QuizSetup />} />
-            <Route path="/quiz" element={<Quiz />} />
-            <Route path="/create-quiz" element={<CreateQuiz />} />
-            <Route path="/custom-quiz/:quizId" element={<CustomQuiz />} />
-            <Route path="/privacy-policy" element={<Privacy />} />
-            <Route path="/disclaimer" element={<Disclaimer />} />
-            <Route path="/404" element={<NotFound />} />
+            <Route path="/" element={<SafeComponent(Index)/>} />
+            <Route path="/blog" element={<SafeComponent(Blog)/>} />
+            <Route path="/auth" element={<SafeComponent(Auth)/>} />
+            <Route path="/apikey" element={<SafeComponent(ApiKeyInput)} onSave={() => {}} />
+            <Route path="/quiz/setup" element={<SafeComponent(QuizSetup)/>} />
+            <Route path="/quiz" element={<SafeComponent(Quiz)/>} />
+            <Route path="/create-quiz" element={<SafeComponent(CreateQuiz)/>} />
+            <Route path="/custom-quiz/:quizId" element={<SafeComponent(CustomQuiz)/>} />
+            <Route path="/privacy-policy" element={<SafeComponent(Privacy)/>} />
+            <Route path="/disclaimer" element={<SafeComponent(Disclaimer)/>} />
+            <Route path="/404" element={<SafeComponent(NotFound)/>} />
             <Route path="*" element={<Navigate to="/404" replace />} />
           </Routes>
           <Toaster />
