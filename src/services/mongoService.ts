@@ -1,9 +1,11 @@
 
 import { MongoClient, ObjectId, Document } from "mongodb";
 
+// MongoDB connection string - in production this should be in an environment variable
 const uri = "mongodb+srv://tk22kalal:tk22kalal@cluster0.shm5c.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
-// Create a new MongoClient instance
-const client = new MongoClient(uri);
+
+// Don't create a global client instance, create per-operation ones instead
+// Removed: const client = new MongoClient(uri);
 
 interface CustomQuestion {
   questionText: string;
@@ -32,12 +34,18 @@ export interface CustomQuiz {
   participants?: Participant[];
 }
 
+// Helper function to create and connect a client
+async function getMongoClient() {
+  const client = new MongoClient(uri);
+  await client.connect();
+  return client;
+}
+
 export const saveCustomQuiz = async (quiz: CustomQuiz): Promise<string> => {
-  let mongoClient = null;
+  let client = null;
   try {
-    mongoClient = new MongoClient(uri);
-    await mongoClient.connect();
-    const database = mongoClient.db("medquiz");
+    client = await getMongoClient();
+    const database = client.db("medquiz");
     const quizzes = database.collection("customQuizzes");
     
     // Remove _id if present to let MongoDB generate it
@@ -54,16 +62,15 @@ export const saveCustomQuiz = async (quiz: CustomQuiz): Promise<string> => {
     console.error("Error saving quiz to MongoDB:", error);
     throw error;
   } finally {
-    if (mongoClient) await mongoClient.close();
+    if (client) await client.close();
   }
 };
 
 export const getCustomQuiz = async (quizId: string): Promise<CustomQuiz | null> => {
-  let mongoClient = null;
+  let client = null;
   try {
-    mongoClient = new MongoClient(uri);
-    await mongoClient.connect();
-    const database = mongoClient.db("medquiz");
+    client = await getMongoClient();
+    const database = client.db("medquiz");
     const quizzes = database.collection("customQuizzes");
     
     const quiz = await quizzes.findOne({ _id: new ObjectId(quizId) });
@@ -79,7 +86,7 @@ export const getCustomQuiz = async (quizId: string): Promise<CustomQuiz | null> 
     console.error("Error fetching quiz from MongoDB:", error);
     throw error;
   } finally {
-    if (mongoClient) await mongoClient.close();
+    if (client) await client.close();
   }
 };
 
@@ -89,45 +96,37 @@ export const saveQuizResult = async (
   userName: string, 
   score: number
 ): Promise<void> => {
-  let mongoClient = null;
+  let client = null;
   try {
-    mongoClient = new MongoClient(uri);
-    await mongoClient.connect();
-    const database = mongoClient.db("medquiz");
+    client = await getMongoClient();
+    const database = client.db("medquiz");
     const quizzes = database.collection("customQuizzes");
     
-    const participant: Participant = {
+    const participant = {
       userId,
       userName,
       score,
       completedAt: new Date()
     };
     
-    // Fix the type issue with a more specific type assertion
-    const updateDoc = { 
-      $push: { 
-        participants: participant 
-      } 
-    };
-    
+    // Use updateOne with proper typing
     await quizzes.updateOne(
       { _id: new ObjectId(quizId) },
-      updateDoc
+      { $push: { participants: participant } }
     );
   } catch (error) {
     console.error("Error saving quiz result to MongoDB:", error);
     throw error;
   } finally {
-    if (mongoClient) await mongoClient.close();
+    if (client) await client.close();
   }
 };
 
 export const getUserCreatedQuizzes = async (userId: string): Promise<CustomQuiz[]> => {
-  let mongoClient = null;
+  let client = null;
   try {
-    mongoClient = new MongoClient(uri);
-    await mongoClient.connect();
-    const database = mongoClient.db("medquiz");
+    client = await getMongoClient();
+    const database = client.db("medquiz");
     const quizzes = database.collection("customQuizzes");
     
     const userQuizzes = await quizzes.find({ creatorId: userId }).toArray();
@@ -141,6 +140,6 @@ export const getUserCreatedQuizzes = async (userId: string): Promise<CustomQuiz[
     console.error("Error fetching user quizzes from MongoDB:", error);
     throw error;
   } finally {
-    if (mongoClient) await mongoClient.close();
+    if (client) await client.close();
   }
 };
