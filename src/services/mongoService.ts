@@ -12,8 +12,15 @@ interface CustomQuestion {
   explanation: string;
 }
 
+export interface Participant {
+  userId: string;
+  userName: string;
+  score: number;
+  completedAt: Date;
+}
+
 export interface CustomQuiz {
-  _id?: string;
+  _id?: string | ObjectId;
   creatorId?: string;
   creatorName: string;
   title: string;
@@ -21,12 +28,7 @@ export interface CustomQuiz {
   timePerQuestion: number;
   questions: CustomQuestion[];
   createdAt: Date;
-  participants?: {
-    userId: string;
-    userName: string;
-    score: number;
-    completedAt: Date;
-  }[];
+  participants?: Participant[];
 }
 
 export const saveCustomQuiz = async (quiz: CustomQuiz): Promise<string> => {
@@ -35,8 +37,11 @@ export const saveCustomQuiz = async (quiz: CustomQuiz): Promise<string> => {
     const database = client.db("medquiz");
     const quizzes = database.collection("customQuizzes");
     
+    // Remove _id if present to let MongoDB generate it
+    const { _id, ...quizWithoutId } = quiz;
+    
     const result = await quizzes.insertOne({
-      ...quiz,
+      ...quizWithoutId,
       createdAt: new Date(),
       participants: []
     });
@@ -57,7 +62,14 @@ export const getCustomQuiz = async (quizId: string): Promise<CustomQuiz | null> 
     const quizzes = database.collection("customQuizzes");
     
     const quiz = await quizzes.findOne({ _id: new ObjectId(quizId) });
-    return quiz as unknown as CustomQuiz;
+    
+    if (!quiz) return null;
+    
+    // Convert ObjectId to string for frontend compatibility
+    return {
+      ...quiz,
+      _id: quiz._id.toString()
+    } as CustomQuiz;
   } catch (error) {
     console.error("Error fetching quiz from MongoDB:", error);
     throw error;
@@ -77,18 +89,16 @@ export const saveQuizResult = async (
     const database = client.db("medquiz");
     const quizzes = database.collection("customQuizzes");
     
+    const participant: Participant = {
+      userId,
+      userName,
+      score,
+      completedAt: new Date()
+    };
+    
     await quizzes.updateOne(
       { _id: new ObjectId(quizId) },
-      { 
-        $push: { 
-          participants: {
-            userId,
-            userName,
-            score,
-            completedAt: new Date()
-          } 
-        } 
-      }
+      { $push: { participants: participant } }
     );
   } catch (error) {
     console.error("Error saving quiz result to MongoDB:", error);
@@ -105,7 +115,12 @@ export const getUserCreatedQuizzes = async (userId: string): Promise<CustomQuiz[
     const quizzes = database.collection("customQuizzes");
     
     const userQuizzes = await quizzes.find({ creatorId: userId }).toArray();
-    return userQuizzes as unknown as CustomQuiz[];
+    
+    // Convert ObjectId to string for frontend compatibility
+    return userQuizzes.map(quiz => ({
+      ...quiz,
+      _id: quiz._id.toString()
+    })) as CustomQuiz[];
   } catch (error) {
     console.error("Error fetching user quizzes from MongoDB:", error);
     throw error;
