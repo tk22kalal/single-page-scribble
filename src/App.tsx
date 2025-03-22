@@ -14,6 +14,8 @@ import Quiz from "./pages/Quiz";
 import Privacy from "./pages/Privacy";
 import Disclaimer from "./pages/Disclaimer";
 import { ApiKeyInput } from "./components/ApiKeyInput";
+import CreateQuiz from "./pages/CreateQuiz";
+import CustomQuiz from "./pages/CustomQuiz";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -42,6 +44,10 @@ const SEO = () => {
       case '/quiz/setup':
         title = "Customize Your Medical Quiz | MedquizAI";
         description = "Create personalized medical practice tests with our AI-powered quiz system.";
+        break;
+      case '/create-quiz':
+        title = "Make Your Own Questions | MedquizAI";
+        description = "Create custom quizzes, share with friends, and track results with our quiz creator.";
         break;
       case '/privacy-policy':
         title = "Privacy Policy | MedquizAI";
@@ -85,6 +91,8 @@ const App = () => {
             <Route path="/apikey" element={<ApiKeyInput onSave={() => {}} />} />
             <Route path="/quiz/setup" element={<QuizSetup />} />
             <Route path="/quiz" element={<Quiz />} />
+            <Route path="/create-quiz" element={<CreateQuiz />} />
+            <Route path="/custom-quiz/:quizId" element={<CustomQuiz />} />
             <Route path="/privacy-policy" element={<Privacy />} />
             <Route path="/disclaimer" element={<Disclaimer />} />
             <Route path="/404" element={<NotFound />} />

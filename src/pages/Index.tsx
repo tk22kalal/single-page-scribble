@@ -4,7 +4,7 @@ import { ApiKeyInput } from "@/components/ApiKeyInput";
 import { Button } from "@/components/ui/button";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
-import { Book } from "lucide-react";
+import { Book, FileEdit } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { HorizontalAd } from "@/components/ads/HorizontalAd";
@@ -19,6 +19,10 @@ const Index = () => {
 
   const handleStartPractice = () => {
     navigate("/auth");
+  };
+
+  const handleCreateQuiz = () => {
+    navigate("/create-quiz");
   };
 
   const handleResetApiKey = () => {
@@ -40,16 +44,23 @@ const Index = () => {
           <p className="text-xl text-gray-600 dark:text-gray-300 mb-8">
             Comprehensive preparation for NEET PG, INICET, FMGE, USMLE, and MBBS with our intelligent quiz platform
           </p>
-          <div className="flex flex-col items-center gap-4">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Button 
-              className="bg-medteal hover:bg-medteal/90 text-white"
+              className="bg-medteal hover:bg-medteal/90 text-white w-full sm:w-auto"
               onClick={handleStartPractice}
             >
               Start Free Practice
             </Button>
             <Button 
+              className="bg-medblue hover:bg-medblue/90 text-white w-full sm:w-auto"
+              onClick={handleCreateQuiz}
+            >
+              <FileEdit className="mr-2 h-5 w-5" />
+              Make Your Own Questions
+            </Button>
+            <Button 
               variant="outline"
-              className="bg-white hover:bg-gray-100 text-medblue border-medblue"
+              className="bg-white hover:bg-gray-100 text-medblue border-medblue w-full sm:w-auto"
               onClick={handleResetApiKey}
             >
               Add New API Key
