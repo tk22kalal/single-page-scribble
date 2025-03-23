@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
@@ -23,10 +24,10 @@ interface CustomQuiz {
   id: string;
   title: string;
   creator_id: string;
-  description?: string;
+  description?: string | null;
   question_count: number;
-  time_per_question?: string;
-  access_code?: string;
+  time_per_question?: string | null;
+  access_code?: string | null;
   created_at: string;
   updated_at: string;
   creator_name?: string;
