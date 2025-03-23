@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -11,7 +12,22 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { Switch } from "@/components/ui/switch";
 
-export const QuizSetupForm = () => {
+interface QuizConfig {
+  id: string;
+  subject: string;
+  chapter: string;
+  topic: string | null;
+  difficulty: string;
+  question_count: string;
+  time_limit: string;
+  created_at: string;
+}
+
+interface QuizSetupFormProps {
+  savedConfigs?: QuizConfig[];
+}
+
+export const QuizSetupForm = ({ savedConfigs = [] }: QuizSetupFormProps) => {
   const [subject, setSubject] = useState("");
   const [chapter, setChapter] = useState("");
   const [topic, setTopic] = useState("");

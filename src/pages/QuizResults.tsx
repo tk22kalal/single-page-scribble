@@ -30,7 +30,7 @@ interface CustomQuiz {
   access_code?: string | null;
   created_at: string;
   updated_at: string;
-  creator_name?: string;
+  creator_name?: string; // Added this optional property
 }
 
 interface Ranking {
@@ -72,6 +72,9 @@ const QuizResults = () => {
         
         if (quizError) throw quizError;
         
+        // Create a modified quiz object with the creator_name property
+        const quizWithCreator = { ...quizData, creator_name: undefined }; 
+        
         const { data: creatorData } = await supabase
           .from('profiles')
           .select('name')
@@ -79,10 +82,10 @@ const QuizResults = () => {
           .single();
         
         if (creatorData) {
-          quizData.creator_name = creatorData.name;
+          quizWithCreator.creator_name = creatorData.name;
         }
         
-        setQuiz(quizData);
+        setQuiz(quizWithCreator);
         
         const { data: allResults, error: rankingsError } = await supabase
           .from('quiz_results')

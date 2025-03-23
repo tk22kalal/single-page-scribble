@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
@@ -21,7 +22,7 @@ interface CustomQuiz {
   creator_id: string;
   created_at: string;
   updated_at: string;
-  creator_name?: string;
+  creator_name?: string; // Added this optional property
 }
 
 interface Question {
@@ -62,6 +63,9 @@ const TakeQuiz = () => {
         
         if (quizError) throw quizError;
         
+        // Create a modified quiz object with the creator_name property
+        const quizWithCreator = { ...quizData, creator_name: undefined };
+        
         const { data: creatorData } = await supabase
           .from('profiles')
           .select('name')
@@ -69,10 +73,10 @@ const TakeQuiz = () => {
           .single();
         
         if (creatorData) {
-          quizData.creator_name = creatorData.name;
+          quizWithCreator.creator_name = creatorData.name;
         }
         
-        setQuiz(quizData);
+        setQuiz(quizWithCreator);
       } catch (error: any) {
         console.error("Error fetching quiz:", error);
         toast.error("Failed to load quiz: " + error.message);
