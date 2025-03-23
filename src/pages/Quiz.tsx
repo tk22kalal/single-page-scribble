@@ -16,7 +16,7 @@ const Quiz = () => {
       setIsAuthenticated(!!session);
       
       // Check if API key exists
-      const apiKey = localStorage.getItem("groq_api_key");
+      const apiKey = localStorage.getItem("GROQ_API_KEY");
       setHasApiKey(!!apiKey);
     };
     
