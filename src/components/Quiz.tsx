@@ -61,19 +61,26 @@ export const Quiz = ({
   const [isLoadingQuestion, setIsLoadingQuestion] = useState(true);
   const [answers, setAnswers] = useState<Record<number, string>>({});
   const [adCounter, setAdCounter] = useState(0);
+  const [loadedQuestionsCount, setLoadedQuestionsCount] = useState(0);
 
   useEffect(() => {
     const loadInitialQuestions = async () => {
       setIsLoadingQuestion(true);
       
       if (questionCount !== "No Limit") {
+        // Only load the number of questions specified
         const count = parseInt(questionCount);
         const loadedQuestions: Question[] = [];
         
         for (let i = 0; i < count; i++) {
-          const question = await generateSingleQuestion();
-          if (question) {
-            loadedQuestions.push(question);
+          try {
+            const question = await generateSingleQuestion();
+            if (question) {
+              loadedQuestions.push(question);
+              setLoadedQuestionsCount(prev => prev + 1);
+            }
+          } catch (error) {
+            console.error("Error loading question:", error);
           }
         }
         
@@ -87,6 +94,7 @@ export const Quiz = ({
         if (question) {
           setQuestions([question]);
           setCurrentQuestion(question);
+          setLoadedQuestionsCount(1);
         }
       }
       
@@ -119,7 +127,7 @@ export const Quiz = ({
       setSelectedAnswer(answers[currentQuestionIndex] || null);
       setShowExplanation(simultaneousResults && answers[currentQuestionIndex] ? true : false);
     }
-  }, [currentQuestionIndex, questions]);
+  }, [currentQuestionIndex, questions, answers, simultaneousResults]);
 
   const generateSingleQuestion = async () => {
     const topicString = topic ? `${chapter} - ${topic}` : chapter;
@@ -153,6 +161,7 @@ export const Quiz = ({
       if (newQuestion) {
         setQuestions(prev => [...prev, newQuestion]);
         setCurrentQuestion(newQuestion);
+        setLoadedQuestionsCount(prev => prev + 1);
       }
       setIsLoadingQuestion(false);
     }
@@ -270,7 +279,7 @@ export const Quiz = ({
         </div>
         <QuizResults 
           score={score} 
-          totalQuestions={questionCount !== "No Limit" ? parseInt(questionCount) : questions.length} 
+          totalQuestions={questionCount !== "No Limit" ? parseInt(questionCount) : loadedQuestionsCount} 
           subject={subject}
           chapter={chapter}
           topic={topic}

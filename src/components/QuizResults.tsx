@@ -53,6 +53,7 @@ export const QuizResults = ({
   const [doubt, setDoubt] = useState("");
   const [doubtMessages, setDoubtMessages] = useState<Record<number, DoubtMessage[]>>({});
   const [isLoadingAnswer, setIsLoadingAnswer] = useState(false);
+  const [showExplanation, setShowExplanation] = useState(false);
   const percentage = Math.round((score / totalQuestions) * 100);
   const navigate = useNavigate();
   
@@ -123,6 +124,7 @@ export const QuizResults = ({
       navigate(-1);
     } else {
       setSelectedQuestionIndex(index);
+      setShowExplanation(false);
     }
   };
   
@@ -153,8 +155,8 @@ export const QuizResults = ({
             <SquareAd />
           </div>
           
-          {/* Question review section for non-simultaneous results */}
-          {!simultaneousResults && questions.length > 0 && (
+          {/* Question review section */}
+          {questions.length > 0 && (
             <div className="mt-6 text-left">
               <h3 className="font-semibold text-lg mb-4">Review Questions</h3>
               
@@ -201,10 +203,23 @@ export const QuizResults = ({
                     ))}
                   </div>
                   
-                  <div className="mt-6">
-                    <h5 className="font-medium">Explanation:</h5>
-                    <p className="mt-2 text-gray-700">{questions[selectedQuestionIndex].explanation}</p>
+                  <div className="mt-4">
+                    <Button
+                      onClick={() => setShowExplanation(!showExplanation)}
+                      variant="outline"
+                      className="flex items-center gap-2"
+                    >
+                      <BookOpenText className="h-4 w-4" />
+                      {showExplanation ? "Hide" : "Show"} Explanation
+                    </Button>
                   </div>
+                  
+                  {showExplanation && (
+                    <div className="mt-4">
+                      <h5 className="font-medium">Explanation:</h5>
+                      <p className="mt-2 text-gray-700">{questions[selectedQuestionIndex].explanation}</p>
+                    </div>
+                  )}
                   
                   <div className="mt-6 border-t pt-4">
                     <h5 className="font-medium flex items-center gap-2 mb-3">
