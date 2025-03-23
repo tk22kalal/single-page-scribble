@@ -1,53 +1,54 @@
 
-import { useEffect, useState } from "react";
-import { Navigate, useLocation } from "react-router-dom";
-import { supabase } from "@/integrations/supabase/client";
+import { useEffect } from "react";
+import { useLocation, Navigate } from "react-router-dom";
 import { Quiz as QuizComponent } from "@/components/Quiz";
+import { UserProfile } from "@/components/UserProfile";
+import { ApiKeyInput } from "@/components/ApiKeyInput";
+import { supabase } from "@/integrations/supabase/client";
+import { useNavigate } from "react-router-dom";
 
 const Quiz = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
-  const [hasApiKey, setHasApiKey] = useState<boolean>(false);
   const location = useLocation();
-  const quizParams = location.state;
+  const navigate = useNavigate();
+
+  // Check if the state has been passed from the setup page
+  const { subject, chapter, topic, difficulty, questionCount, timeLimit, simultaneousResults } = location.state || {};
 
   useEffect(() => {
-    const checkAuth = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      setIsAuthenticated(!!session);
-      
-      // Check if API key exists
-      const apiKey = localStorage.getItem("GROQ_API_KEY");
-      setHasApiKey(!!apiKey);
-    };
-    
-    checkAuth();
+    // Check if we have all required parameters
+    if (!subject || !chapter || !difficulty || !questionCount || !timeLimit) {
+      navigate("/quiz/setup");
+    }
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      setIsAuthenticated(!!session);
-    });
+    // Update document title
+    document.title = `${subject} Quiz | MedquizAI`;
+  }, [subject, chapter, difficulty, questionCount, timeLimit, navigate]);
 
-    return () => subscription.unsubscribe();
-  }, []);
-
-  if (isAuthenticated === null) {
-    return <div>Loading...</div>;
+  // Check if ApiKey exists
+  const apiKey = localStorage.getItem("groq_api_key");
+  if (!apiKey) {
+    return <ApiKeyInput onSave={() => window.location.reload()} />;
   }
 
-  if (!isAuthenticated) {
-    return <Navigate to="/auth" />;
-  }
-
-  if (!hasApiKey) {
-    return <Navigate to="/quiz/setup" />;
-  }
-
-  if (!quizParams) {
-    return <Navigate to="/" />;
+  // If we don't have required parameters, redirect to setup
+  if (!subject || !chapter || !difficulty || !questionCount || !timeLimit) {
+    return <Navigate to="/quiz/setup" replace />;
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <QuizComponent {...quizParams} />
+    <div className="min-h-screen bg-medbg dark:bg-gray-900">
+      <div className="fixed top-4 right-4 z-50">
+        <UserProfile />
+      </div>
+      <QuizComponent 
+        subject={subject}
+        chapter={chapter}
+        topic={topic || ""}
+        difficulty={difficulty}
+        questionCount={questionCount}
+        timeLimit={timeLimit}
+        simultaneousResults={simultaneousResults !== undefined ? simultaneousResults : true}
+      />
     </div>
   );
 };

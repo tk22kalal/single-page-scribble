@@ -168,7 +168,6 @@ export const QuizSetupForm = ({ savedConfigs = [] }: QuizSetupFormProps) => {
                 </SelectContent>
               </Select>
             </div>
-            {/* Add simultaneous results toggle */}
             <div className="space-y-2">
               <Label htmlFor="simultaneous-results">Show Results Immediately</Label>
               <div className="flex items-center space-x-2">
