@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
@@ -24,6 +23,12 @@ interface CustomQuiz {
   id: string;
   title: string;
   creator_id: string;
+  description?: string;
+  question_count: number;
+  time_per_question?: string;
+  access_code?: string;
+  created_at: string;
+  updated_at: string;
   creator_name?: string;
 }
 
@@ -48,7 +53,6 @@ const QuizResults = () => {
     
     const fetchResultData = async () => {
       try {
-        // Fetch result details
         const { data: resultData, error: resultError } = await supabase
           .from('quiz_results')
           .select('*')
@@ -59,7 +63,6 @@ const QuizResults = () => {
         
         setResult(resultData);
         
-        // Fetch quiz details
         const { data: quizData, error: quizError } = await supabase
           .from('custom_quizzes')
           .select('*')
@@ -68,7 +71,6 @@ const QuizResults = () => {
         
         if (quizError) throw quizError;
         
-        // Fetch creator name
         const { data: creatorData } = await supabase
           .from('profiles')
           .select('name')
@@ -81,7 +83,6 @@ const QuizResults = () => {
         
         setQuiz(quizData);
         
-        // Fetch all results for this quiz to show rankings
         const { data: allResults, error: rankingsError } = await supabase
           .from('quiz_results')
           .select('*')

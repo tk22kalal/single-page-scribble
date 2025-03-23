@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
@@ -15,18 +14,20 @@ import { Clock, Loader2 } from "lucide-react";
 interface CustomQuiz {
   id: string;
   title: string;
-  description: string;
+  description: string | null;
   question_count: number;
-  time_per_question: string;
-  access_code: string;
+  time_per_question: string | null;
+  access_code: string | null;
   creator_id: string;
+  created_at: string;
+  updated_at: string;
   creator_name?: string;
 }
 
 interface Question {
   id: string;
   question_text: string;
-  image_url?: string;
+  image_url?: string | null;
   option_a: string;
   option_b: string;
   option_c: string;
@@ -53,7 +54,6 @@ const TakeQuiz = () => {
     
     const fetchQuizData = async () => {
       try {
-        // Fetch quiz details
         const { data: quizData, error: quizError } = await supabase
           .from('custom_quizzes')
           .select('*')
@@ -62,7 +62,6 @@ const TakeQuiz = () => {
         
         if (quizError) throw quizError;
         
-        // Fetch creator name
         const { data: creatorData } = await supabase
           .from('profiles')
           .select('name')
@@ -86,18 +85,15 @@ const TakeQuiz = () => {
   }, [id]);
 
   useEffect(() => {
-    // Timer logic for question countdown
     if (!isVerified || !quiz || quiz.time_per_question === 'No Limit' || !timeLeft) return;
     
     const timerInterval = setInterval(() => {
       setTimeLeft((prev) => {
         if (prev && prev <= 1) {
-          // Time's up, move to the next question
           if (currentQuestionIndex < questions.length - 1) {
             setCurrentQuestionIndex(prev => prev + 1);
             return parseInt(quiz.time_per_question);
           } else {
-            // Submit the quiz if on the last question
             handleSubmitQuiz();
             return 0;
           }
@@ -123,7 +119,6 @@ const TakeQuiz = () => {
     }
     
     try {
-      // Fetch questions for the quiz
       const { data: questionData, error: questionError } = await supabase
         .from('quiz_questions')
         .select('id, question_text, image_url, option_a, option_b, option_c, option_d, correct_answer')
@@ -139,7 +134,6 @@ const TakeQuiz = () => {
       setQuestions(questionData);
       setIsVerified(true);
       
-      // Initialize timer if applicable
       if (quiz.time_per_question !== 'No Limit') {
         setTimeLeft(parseInt(quiz.time_per_question));
       }
@@ -160,7 +154,6 @@ const TakeQuiz = () => {
     if (currentQuestionIndex < questions.length - 1) {
       setCurrentQuestionIndex(prev => prev + 1);
       
-      // Reset timer for new question
       if (quiz && quiz.time_per_question !== 'No Limit') {
         setTimeLeft(parseInt(quiz.time_per_question));
       }
@@ -171,7 +164,6 @@ const TakeQuiz = () => {
     if (currentQuestionIndex > 0) {
       setCurrentQuestionIndex(prev => prev - 1);
       
-      // Reset timer for previous question
       if (quiz && quiz.time_per_question !== 'No Limit') {
         setTimeLeft(parseInt(quiz.time_per_question));
       }
@@ -184,7 +176,6 @@ const TakeQuiz = () => {
     setIsSubmitting(true);
     
     try {
-      // Calculate score
       let score = 0;
       questions.forEach(question => {
         if (selectedAnswers[question.id] === question.correct_answer) {
@@ -192,11 +183,9 @@ const TakeQuiz = () => {
         }
       });
       
-      // Get authenticated user if available
       const { data: { session } } = await supabase.auth.getSession();
       const userId = session?.user?.id;
       
-      // Save quiz result
       const { data: resultData, error: resultError } = await supabase
         .from('quiz_results')
         .insert({
@@ -205,7 +194,7 @@ const TakeQuiz = () => {
           user_name: userName,
           score,
           total_questions: questions.length,
-          time_taken: null // Could track total time if needed
+          time_taken: null
         })
         .select()
         .single();
@@ -238,7 +227,6 @@ const TakeQuiz = () => {
     );
   }
 
-  // Access code verification screen
   if (!isVerified) {
     return (
       <div className="min-h-screen bg-medbg dark:bg-gray-900">
@@ -305,7 +293,6 @@ const TakeQuiz = () => {
     );
   }
 
-  // Quiz taking screen
   const currentQuestion = questions[currentQuestionIndex];
   
   return (
