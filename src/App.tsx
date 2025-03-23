@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -14,6 +13,10 @@ import Quiz from "./pages/Quiz";
 import Privacy from "./pages/Privacy";
 import Disclaimer from "./pages/Disclaimer";
 import { ApiKeyInput } from "./components/ApiKeyInput";
+import CreateQuiz from "./pages/CreateQuiz";
+import EditQuiz from "./pages/EditQuiz";
+import TakeQuiz from "./pages/TakeQuiz";
+import QuizResults from "./pages/QuizResults";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -24,12 +27,10 @@ const queryClient = new QueryClient({
   },
 });
 
-// SEO component to update meta tags
 const SEO = () => {
   const location = useLocation();
 
   useEffect(() => {
-    // Update meta tags based on current route
     const path = location.pathname;
     let title = "Medquiz: AI-Powered Medical Exam Question Bank";
     let description = "Free medical question bank for NEET PG, INI-CET, FMGE, USMLE, and MBBS preparation.";
@@ -62,7 +63,6 @@ const SEO = () => {
 };
 
 const App = () => {
-  // Check if we're on a direct HTML page
   const path = window.location.pathname;
   if (path === '/privacy-policy.html') {
     window.location.href = '/privacy-policy';
@@ -85,6 +85,10 @@ const App = () => {
             <Route path="/apikey" element={<ApiKeyInput onSave={() => {}} />} />
             <Route path="/quiz/setup" element={<QuizSetup />} />
             <Route path="/quiz" element={<Quiz />} />
+            <Route path="/quiz/create" element={<CreateQuiz />} />
+            <Route path="/quiz/edit/:id" element={<EditQuiz />} />
+            <Route path="/quiz/take/:id" element={<TakeQuiz />} />
+            <Route path="/quiz/results/:id" element={<QuizResults />} />
             <Route path="/privacy-policy" element={<Privacy />} />
             <Route path="/disclaimer" element={<Disclaimer />} />
             <Route path="/404" element={<NotFound />} />
